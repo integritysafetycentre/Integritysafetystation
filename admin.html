@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safety Centre Admin</title>
+
+```
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+```
+
+</head>
+
+<body>
+
+<div class="app">
+
+```
+<div class="hero">
+    <div class="eyebrow">Admin Tools</div>
+
+    <h1>🔐 Safety Centre Admin</h1>
+
+    <div class="subtitle">
+        Management tools for SDS reviews, document libraries, emergency resources, and Safety Centre updates.
+    </div>
+
+    <div class="top-actions">
+        <a class="primary-action" href="index.html">
+            🏠 Back to Safety Centre
+        </a>
+
+        <a class="primary-action dark" href="sds.html">
+            🧪 View SDS Library
+        </a>
+    </div>
+</div>
+
+<div class="panel">
+
+    <div class="notice">
+        <strong>Admin Area:</strong> This page is intended for Health & Safety use.
+        Use the tools below to manage SDS review preparation and Safety Centre resources.
+    </div>
+
+</div>
+
+<h2 class="section-title">SDS Management</h2>
+
+<div class="tile-grid">
+
+    <button class="tile admin-tile" onclick="runSDSCheck()">
+        <div>
+            <div class="tile-title">🧪 Check SDS Updates</div>
+            <div class="tile-desc">
+                Run the SDS update preparation script for rows marked Search This Week.
+            </div>
+        </div>
+    </button>
+
+    <a class="tile" href="https://docs.google.com/spreadsheets/d/1NqcXqc60pkqD3KG_lrV2jFOqCiZTTupT4WvB0Kfryfg/edit?gid=0#gid=0" target="_blank">
+        <div>
+            <div class="tile-title">📊 SDS Master Sheet</div>
+            <div class="tile-desc">
+                Open the Google Sheet used by the live SDS Library.
+            </div>
+        </div>
+    </a>
+
+    <a class="tile" href="sds.html">
+        <div>
+            <div class="tile-title">🧪 Live SDS Library</div>
+            <div class="tile-desc">
+                View the employee-facing SDS Library.
+            </div>
+        </div>
+    </a>
+
+</div>
+
+<div class="panel">
+
+    <h2 class="panel-title">SDS Check Status</h2>
+
+    <div id="sdsStatus" class="notice">
+        Ready. Click <strong>Check SDS Updates</strong> to run the script.
+    </div>
+
+</div>
+
+<h2 class="section-title">Resource Management</h2>
+
+<div class="tile-grid">
+
+    <a class="tile" href="manuals.html">
+        <div>
+            <div class="tile-title">🔩 Equipment Manuals</div>
+            <div class="tile-desc">
+                Manage future machine manuals, parts books, and technical resources.
+            </div>
+        </div>
+    </a>
+
+    <a class="tile" href="emergency.html">
+        <div>
+            <div class="tile-title">🚨 Emergency Resources</div>
+            <div class="tile-desc">
+                View emergency maps, AED locations, plant addresses, and evacuation information.
+            </div>
+        </div>
+    </a>
+
+    <a class="tile" href="news.html">
+        <div>
+            <div class="tile-title">📰 Safety News</div>
+            <div class="tile-desc">
+                View safety alerts, reminders, and Safety Centre updates.
+            </div>
+        </div>
+    </a>
+
+    <a class="tile" href="forms.html">
+        <div>
+            <div class="tile-title">📄 Forms Centre</div>
+            <div class="tile-desc">
+                View employee forms, inspections, and reporting resources.
+            </div>
+        </div>
+    </a>
+
+</div>
+
+<div class="footer">
+    Integrity Tool & Mold Inc.
+</div>
+```
+
+</div>
+
+<script>
+const sdsCheckUrl = "https://script.google.com/macros/s/AKfycbx86YOC_zZtoPCX8kn6zyCrrgQNS8kWhBY4xAiasKuswbjrgytIM1AfnpwIBFWYd_rurw/exec";
+
+function runSDSCheck() {
+    const statusBox = document.getElementById("sdsStatus");
+
+    statusBox.innerHTML = "Running SDS update check... please wait.";
+
+    fetch(sdsCheckUrl)
+        .then(response => response.text())
+        .then(result => {
+            statusBox.innerHTML = `
+                <strong>SDS check completed.</strong><br>
+                ${result}<br><br>
+                Open the SDS Master Sheet to review the updated results.
+            `;
+        })
+        .catch(error => {
+            statusBox.innerHTML = `
+                <strong>SDS check could not be completed.</strong><br>
+                This may be caused by browser security settings or Apps Script permissions.<br><br>
+                You can still run the script directly from Google Apps Script.
+            `;
+            console.error(error);
+        });
+}
+</script>
+
+</body>
+</html>

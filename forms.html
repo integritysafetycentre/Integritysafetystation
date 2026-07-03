@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safety Forms Centre</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+<div class="app">
+    <div class="hero">
+        <div class="eyebrow">Documents</div>
+        <h1>📄 Forms Centre</h1>
+        <div class="subtitle">Safety, inspection, incident, and investigation forms.</div>
+        <div class="top-actions">
+            <a class="primary-action" href="report.html">📝 Submit Injury / Near Miss Online</a>
+            <a class="primary-action dark" href="index.html">🏠 Back to Home</a>
+        </div>
+    </div>
+
+    <div class="panel">
+        <input type="text" id="searchBox" placeholder="Search forms..." onkeyup="searchForms()">
+        <div style="margin-top:20px;">
+            <a class="list-card" href="forms/Injury Report.pdf" target="_blank"><div class="list-title">📝 Employee Injury Report</div><div class="list-desc">Workplace injury investigation, treatment, medical attention and return-to-work documentation.</div></a>
+            <a class="list-card" href="forms/Near Miss.pdf" target="_blank"><div class="list-title">⚠️ Near Miss Report</div><div class="list-desc">Investigate incidents where injury could have occurred but was avoided.</div></a>
+            <a class="list-card" href="forms/Monthly JHSC Inspection.pdf" target="_blank"><div class="list-title">🔍 Monthly JHSC Inspection</div><div class="list-desc">Monthly facility inspection covering PPE, emergency systems, machine guarding, LOTO and housekeeping.</div></a>
+            <a class="list-card" href="forms/Risk Hazard Assessment.pdf" target="_blank"><div class="list-title">📋 Risk Hazard Assessment</div><div class="list-desc">Hazard identification, risk evaluation and control recommendations.</div></a>
+        </div>
+    </div>
+</div>
+<script>
+function searchForms() {
+    let filter = document.getElementById("searchBox").value.toUpperCase();
+    let links = document.getElementsByClassName("list-card");
+    for (let i = 0; i < links.length; i++) {
+        let text = links[i].textContent || links[i].innerText;
+        links[i].style.display = text.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+    }
+}
+</script>
+</body>
+</html>

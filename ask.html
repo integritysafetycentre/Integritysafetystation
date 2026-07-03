@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask the Safety Centre</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+<div class="app">
+    <div class="hero">
+        <div class="eyebrow">Smart Routing</div>
+        <h1>💬 Ask Safety</h1>
+        <div class="subtitle">Type a question and get directed to the right resource or person.</div>
+    </div>
+
+    <div class="panel">
+        <input id="question" placeholder="Example: Who do I ask about benefits?">
+        <button class="action-button" onclick="findAnswer()">💬 Ask</button>
+        <div class="notice" style="margin-top:20px;">
+            Try: benefits, injury, near miss, SDS, AED, evacuation, maintenance, policies, SOPs, training, forms, plant address.
+        </div>
+        <div id="answer" class="result-box"></div>
+        <a class="back" href="index.html">🏠 Back to Safety Centre</a>
+    </div>
+</div>
+
+<script>
+function findAnswer() {
+    let q = document.getElementById("question").value.toLowerCase();
+    let box = document.getElementById("answer");
+    let answer = "";
+
+    if (q.includes("benefit") || q.includes("payroll") || q.includes("pay stub") || q.includes("paystub") || q.includes("vacation") || q.includes("time off") || q.includes("leave") || q.includes("attendance") || q.includes("accommodation") || q.includes("harassment") || q.includes("hr")) {
+        answer = `<h2>👥 Human Resources</h2><p>For benefits, payroll, vacation, attendance, leave, accommodation, or HR-related questions, contact Tanya Steer or Lindsay Kennedy.</p><p><a class="action-button" href="contacts.html">📞 View Key Contacts</a></p>`;
+    } else if (q.includes("injury") || q.includes("injured") || q.includes("hurt") || q.includes("accident") || q.includes("incident") || q.includes("near miss") || q.includes("hazard") || q.includes("unsafe")) {
+        answer = `<h2>📝 Report to Health & Safety</h2><p>For injuries, incidents, near misses, hazards, or unsafe conditions, notify your Leader and Health & Safety as soon as possible.</p><p><a class="action-button" href="report.html">📝 Report Injury / Near Miss</a></p>`;
+    } else if (q.includes("sds") || q.includes("whmis") || q.includes("chemical") || q.includes("material") || q.includes("fluid") || q.includes("solution") || q.includes("oil")) {
+        answer = `<h2>🧪 SDS / WHMIS</h2><p>For Safety Data Sheets, chemicals, materials, fluids, or WHMIS information, use the SDS Library.</p><p><a class="action-button" href="sds.html">🧪 Open SDS Library</a></p>`;
+    } else if (q.includes("aed") || q.includes("defib") || q.includes("defibrillator") || q.includes("emergency") || q.includes("evacuation") || q.includes("fire") || q.includes("muster") || q.includes("911")) {
+        answer = `<h2>🚨 Emergency Information</h2><p>For AED locations, emergency evacuation, plant addresses, and emergency instructions, use the Emergency Information page.</p><p><a class="action-button" href="emergency.html">🚨 Open Emergency Information</a></p>`;
+    } else if (q.includes("maintenance") || q.includes("broken") || q.includes("repair") || q.includes("machine") || q.includes("equipment") || q.includes("leak") || q.includes("lights") || q.includes("door") || q.includes("facility")) {
+        answer = `<h2>🔧 Facilities / Maintenance</h2><p>For maintenance, repairs, equipment concerns, leaks, lighting, doors, or facility issues, contact Facilities / Maintenance.</p><p><a class="action-button" href="contacts.html">📞 View Key Contacts</a></p>`;
+    } else if (q.includes("policy") || q.includes("procedure") || q.includes("smoking") || q.includes("vaping")) {
+        answer = `<h2>📖 Policies & Procedures</h2><p>For safety policies, reporting procedures, smoking/vaping policy, or company safety procedures, use the Policies page.</p><p><a class="action-button" href="policies.html">📖 Open Policies</a></p>`;
+    } else if (q.includes("sop") || q.includes("standard operating") || q.includes("krauss") || q.includes("press") || q.includes("molding")) {
+        answer = `<h2>⚙️ SOP Library</h2><p>For Standard Operating Procedures, equipment procedures, or machine-specific instructions, use the SOP Library.</p><p><a class="action-button" href="sops.html">⚙️ Open SOP Library</a></p>`;
+    } else if (q.includes("training") || q.includes("moodle") || q.includes("course") || q.includes("online training")) {
+        answer = `<h2>🎓 Training Portal</h2><p>For online training, courses, or Moodle access, open the Training Portal.</p><p><a class="action-button" href="https://training.teamintegrity.com/" target="_blank">🎓 Open Training Portal</a></p>`;
+    } else if (q.includes("form") || q.includes("inspection") || q.includes("jhsc") || q.includes("risk assessment") || q.includes("hazard assessment")) {
+        answer = `<h2>📄 Forms Centre</h2><p>For inspection forms, injury reports, near miss reports, JHSC inspections, and hazard assessments, use the Forms Centre.</p><p><a class="action-button" href="forms.html">📄 Open Forms Centre</a></p>`;
+    } else {
+        answer = `<h2>🔎 Not Sure Yet</h2><p>I do not have a direct answer for that question yet. Try the Search Safety Centre page, or contact your Leader, Health & Safety, or Human Resources.</p><p><a class="action-button" href="search.html">🔎 Search Safety Centre</a></p>`;
+    }
+
+    box.innerHTML = answer;
+    box.style.display = "block";
+}
+</script>
+</body>
+</html>

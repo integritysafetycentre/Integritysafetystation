@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOP Library</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+<div class="app">
+    <div class="hero">
+        <div class="eyebrow">Procedures</div>
+        <h1>⚙️ SOP Library</h1>
+        <div class="subtitle">Standard Operating Procedures by equipment, machine, or process.</div>
+    </div>
+
+    <div class="panel">
+        <input type="text" id="searchBox" placeholder="Search SOPs..." onkeyup="searchSOPs()">
+        <div style="margin-top:20px;">
+            <a class="list-card" href="sops/4500 ton krauss.pdf" target="_blank"><div class="list-title">🏭 Krauss Maffei 4000-24500 MX Injection Molding Machine</div><div class="list-desc">Safe setup, operation, shutdown, PPE, pre-operational checks, LOTO, and training requirements.</div></a>
+            <a class="list-card" href="sops/Krauss Maffei 1012-4300 GX WP 900 ton press.pdf" target="_blank"><div class="list-title">🏭 Krauss Maffei 1012-4300 GX WP 900 Ton Press</div><div class="list-desc">Safe operation, start-up, shutdown, emergency stop, LOTO, hydraulic hazards, and WHMIS requirements.</div></a>
+        </div>
+        <a class="back" href="index.html">🏠 Back to Safety Centre</a>
+    </div>
+</div>
+<script>
+function searchSOPs() {
+    let filter = document.getElementById("searchBox").value.toUpperCase();
+    let links = document.getElementsByClassName("list-card");
+    for (let i = 0; i < links.length; i++) {
+        let text = links[i].textContent || links[i].innerText;
+        links[i].style.display = text.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+    }
+}
+</script>
+</body>
+</html>

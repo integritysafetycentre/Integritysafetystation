@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDS Library</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <div class="hero">
+        <div class="eyebrow">WHMIS</div>
+
+        <h1>🧪 SDS Library</h1>
+
+        <div class="subtitle">
+            Search Safety Data Sheets by product name, supplier, or category.
+        </div>
+
+        <div class="top-actions">
+            <a class="primary-action" href="index.html">
+                🏠 Back to Safety Centre
+            </a>
+
+            <a class="primary-action dark" href="search.html">
+                🔎 Search Portal
+            </a>
+        </div>
+    </div>
+
+    <div class="panel">
+
+        <input 
+            type="text" 
+            id="searchBox" 
+            placeholder="Search product, supplier, category..." 
+            onkeyup="filterSDS()"
+        >
+
+        <label for="categoryFilter">Filter by Category</label>
+
+        <select id="categoryFilter" onchange="filterSDS()">
+            <option value="">All Categories</option>
+        </select>
+
+        <div class="notice" id="loadingMessage">
+            Loading SDS library from Google Sheets...
+        </div>
+
+        <div id="sdsCount" class="notice" style="display:none;"></div>
+
+        <div id="sdsList" style="margin-top:20px;"></div>
+
+    </div>
+
+    <div class="footer">
+        Integrity Tool & Mold Inc.
+    </div>
+
+</div>
+
+<script>
+const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQHU5a5Dl8bJsd60Xhlf33emLwp-_17B4qU7UVIhQaFFsmleukaovlu6b5Ltwo73Q5qFCnN5OD06bFF/pub?output=csv";
+
+let allSDS = [];
+
+fetch(csvUrl)
+    .then(response => response.text())
+    .then(csvText => {
+        allSDS = parseCSV(csvText);
+        populateCategories(allSDS);
+        displaySDS(allSDS);
+
+        document.getElementById("loadingMessage").style.display = "none";
+    })
+    .catch(error => {
+        document.getElementById("loadingMessage").innerHTML =
+            "<strong>Unable to load SDS library.</strong><br>Please check the Google Sheet publish link.";
+        console.error(error);
+    });
+
+function parseCSV(csvText) {
+    const rows = [];
+    let currentRow = [];
+    let currentValue = "";
+    let insideQuotes = false;
+
+    for (let i = 0; i < csvText.length; i++) {
+        const char = csvText[i];
+        const nextChar = csvText[i + 1];
+
+        if (char === '"' && insideQuotes && nextChar === '"') {
+            currentValue += '"';
+            i++;
+        } else if (char === '"') {
+            insideQuotes = !insideQuotes;
+        } else if (char === "," && !insideQuotes) {
+            currentRow.push(currentValue);
+            currentValue = "";
+        } else if ((char === "\n" || char === "\r") && !insideQuotes) {
+            if (currentValue || currentRow.length > 0) {
+                currentRow.push(currentValue);
+                rows.push(currentRow);
+                currentRow = [];
+                currentValue = "";
+            }
+        } else {
+            currentValue += char;
+        }
+    }
+
+    if (currentValue || currentRow.length > 0) {
+        currentRow.push(currentValue);
+        rows.push(currentRow);
+    }
+
+    const headers = rows[0].map(header => header.trim());
+
+    return rows.slice(1).map(row => {
+        const item = {};
+
+        headers.forEach((header, index) => {
+            item[header] = row[index] ? row[index].trim() : "";
+        });
+
+        return item;
+    }).filter(item => item["Product Name"]);
+}
+
+function populateCategories(data) {
+    const categorySelect = document.getElementById("categoryFilter");
+    categorySelect.innerHTML = '<option value="">All Categories</option>';
+
+    const categories = [...new Set(
+        data
+            .map(item => item["Category"])
+            .filter(category => category && category.trim() !== "")
+    )].sort();
+
+    categories.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        categorySelect.appendChild(option);
+    });
+}
+
+function displaySDS(data) {
+    const sdsList = document.getElementById("sdsList");
+    const sdsCount = document.getElementById("sdsCount");
+
+    sdsList.innerHTML = "";
+
+    sdsCount.style.display = "block";
+    sdsCount.innerHTML = "<strong>" + data.length + "</strong> SDS records shown.";
+
+    if (data.length === 0) {
+        sdsList.innerHTML = `
+            <div class="notice">
+                No SDS records match your search.
+            </div>
+        `;
+        return;
+    }
+
+    data.forEach(item => {
+        const product = item["Product Name"] || "Unnamed Product";
+        const supplier = item["Supplier"] || item["Supplier "] || "Supplier not listed";
+        const category = item["Category"] || "Uncategorized";
+        const sdsDate = item["Current SDS Date"] || item["SDS Date"] || "SDS date not listed";
+        const priority = item["Priority"] || "";
+        const needsUpdate = item["Needs update search"] || item["Needs Update Search"] || "";
+        const sdsLink = item["SDS File Link"] || item["SDS Link"] || item["Link"] || "";
+
+        const card = document.createElement("div");
+        card.className = "list-card";
+
+        let linkButton = "";
+
+        if (sdsLink) {
+            linkButton = `
+                <a class="action-button" href="${escapeHTML(sdsLink)}" target="_blank">
+                    📄 Open SDS
+                </a>
+            `;
+        } else {
+            linkButton = `
+                <div class="notice" style="margin-top:14px;">
+                    SDS file link not available.
+                </div>
+            `;
+        }
+
+        card.innerHTML = `
+            <div class="list-title">🧪 ${escapeHTML(product)}</div>
+
+            <div class="list-desc">
+                <strong>Supplier:</strong> ${escapeHTML(supplier)}<br>
+                <strong>Category:</strong> ${escapeHTML(category)}<br>
+                <strong>SDS Date:</strong> ${escapeHTML(sdsDate)}
+                ${priority ? "<br><strong>Priority:</strong> " + escapeHTML(priority) : ""}
+                ${needsUpdate ? "<br><strong>Needs Update Search:</strong> " + escapeHTML(needsUpdate) : ""}
+            </div>
+
+            ${linkButton}
+        `;
+
+        sdsList.appendChild(card);
+    });
+}
+
+function filterSDS() {
+    const searchText = document.getElementById("searchBox").value.toLowerCase();
+    const selectedCategory = document.getElementById("categoryFilter").value;
+
+    const filtered = allSDS.filter(item => {
+        const product = (item["Product Name"] || "").toLowerCase();
+        const supplier = (item["Supplier"] || item["Supplier "] || "").toLowerCase();
+        const category = (item["Category"] || "").toLowerCase();
+        const priority = (item["Priority"] || "").toLowerCase();
+
+        const matchesSearch =
+            product.includes(searchText) ||
+            supplier.includes(searchText) ||
+            category.includes(searchText) ||
+            priority.includes(searchText);
+
+        const matchesCategory =
+            selectedCategory === "" ||
+            item["Category"] === selectedCategory;
+
+        return matchesSearch && matchesCategory;
+    });
+
+    displaySDS(filtered);
+}
+
+function escapeHTML(text) {
+    return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Injury / Near Miss</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+<div class="app">
+    <div class="hero">
+        <div class="eyebrow">Safety Reporting</div>
+        <h1>📝 Report Injury / Near Miss</h1>
+        <div class="subtitle">Submit workplace injury, near miss, hazard, or incident information.</div>
+    </div>
+
+    <div class="panel">
+        <div class="alert"><strong>Emergency:</strong> If someone requires immediate medical assistance, call 911 first.</div>
+
+        <label>Team Member Name <span class="required">*</span></label><input id="name" type="text">
+        <label>Plant / Location <span class="required">*</span></label>
+        <select id="plant">
+            <option value="">Select Plant / Location</option>
+            <option>Synergy 1</option><option>Synergy 2</option><option>Synergy 3</option><option>Synergy 4</option>
+            <option>Synergy 5</option><option>Innovation Centre</option><option>HD</option><option>HD2</option><option>Other</option>
+        </select>
+        <label>Department</label><input id="department" type="text">
+        <label>Incident Type <span class="required">*</span></label>
+        <select id="type">
+            <option value="">Select Incident Type</option>
+            <option>Injury</option><option>Near Miss</option><option>Hazard</option><option>Property Damage</option>
+            <option>Environmental Release</option><option>Fire / Explosion</option><option>Other</option>
+        </select>
+        <label>Date of Incident <span class="required">*</span></label><input id="date" type="date">
+        <label>Time of Incident</label><input id="time" type="time">
+        <label>Description of What Happened <span class="required">*</span></label><textarea id="description"></textarea>
+        <label>Was anyone injured?</label><select id="injured"><option value="">Select</option><option>Yes</option><option>No</option><option>Unknown</option></select>
+        <label>Immediate Action Taken</label><textarea id="action"></textarea>
+        <label>Reported By <span class="required">*</span></label><input id="reportedBy" type="text">
+
+        <button class="action-button" onclick="sendReport()">📝 Submit Report by Email</button>
+        <div id="message" class="result-box"></div>
+        <br>
+        <a class="back" href="index.html">🏠 Back to Safety Centre</a>
+    </div>
+</div>
+
+<script>
+function sendReport() {
+    let name = document.getElementById("name").value.trim();
+    let plant = document.getElementById("plant").value;
+    let department = document.getElementById("department").value.trim();
+    let type = document.getElementById("type").value;
+    let date = document.getElementById("date").value;
+    let time = document.getElementById("time").value;
+    let description = document.getElementById("description").value.trim();
+    let injured = document.getElementById("injured").value;
+    let action = document.getElementById("action").value.trim();
+    let reportedBy = document.getElementById("reportedBy").value.trim();
+    let messageBox = document.getElementById("message");
+
+    if (!name || !plant || !type || !date || !description || !reportedBy) {
+        messageBox.style.display = "block";
+        messageBox.innerHTML = "<strong>Missing information:</strong> Please complete all required fields marked with * before submitting.";
+        return;
+    }
+
+    let submittedAt = new Date().toLocaleString();
+    let subject = "Safety Report - " + type + " - " + plant;
+    let body =
+        "SAFETY REPORT SUBMITTED%0D%0A" +
+        "Submitted From: Integrity Safety Centre%0D%0A" +
+        "Submitted At: " + submittedAt + "%0D%0A%0D%0A" +
+        "TEAM MEMBER INFORMATION%0D%0A" +
+        "Team Member Name: " + name + "%0D%0A" +
+        "Plant / Location: " + plant + "%0D%0A" +
+        "Department: " + department + "%0D%0A%0D%0A" +
+        "INCIDENT DETAILS%0D%0A" +
+        "Incident Type: " + type + "%0D%0A" +
+        "Date of Incident: " + date + "%0D%0A" +
+        "Time of Incident: " + time + "%0D%0A" +
+        "Was anyone injured?: " + injured + "%0D%0A%0D%0A" +
+        "DESCRIPTION OF WHAT HAPPENED:%0D%0A" + description + "%0D%0A%0D%0A" +
+        "IMMEDIATE ACTION TAKEN:%0D%0A" + action + "%0D%0A%0D%0A" +
+        "REPORTED BY:%0D%0A" + reportedBy + "%0D%0A%0D%0A" +
+        "Reminder: Formal investigation and corrective action follow-up may be required.";
+
+    window.location.href = "mailto:lheffernan@teamintegrity.com?subject=" + encodeURIComponent(subject) + "&body=" + body;
+}
+</script>
+</body>
+</html>
