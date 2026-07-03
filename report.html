@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Report Injury / Near Miss</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+<div class="hero">
+<div class="eyebrow">Safety Reporting</div>
+<h1>📝 Report Injury / Near Miss</h1>
+<div class="subtitle">Submit workplace injury, near miss, hazard, or incident information.</div>
+</div>
+
+<div class="panel">
+
+<div class="alert"><strong>Emergency:</strong> If someone requires immediate medical assistance, call 911 first.</div>
+
+<label>Team Member Name <span class="required">*</span></label>
+<input id="name" type="text">
+
+<label>Plant / Location <span class="required">*</span></label>
+<select id="plant">
+<option value="">Select Plant / Location</option>
+<option>Synergy 1</option>
+<option>Synergy 2</option>
+<option>Synergy 3</option>
+<option>Synergy 4</option>
+<option>Synergy 5</option>
+<option>Innovation Centre</option>
+<option>HD</option>
+<option>HD2</option>
+<option>Other</option>
+</select>
+
+<label>Department</label>
+<input id="department" type="text">
+
+<label>Incident Type <span class="required">*</span></label>
+<select id="type">
+<option value="">Select Incident Type</option>
+<option>Injury</option>
+<option>Near Miss</option>
+<option>Hazard</option>
+<option>Property Damage</option>
+<option>Environmental Release</option>
+<option>Fire / Explosion</option>
+<option>Other</option>
+</select>
+
+<label>Date of Incident <span class="required">*</span></label>
+<input id="date" type="date">
+
+<label>Time of Incident</label>
+<input id="time" type="time">
+
+<label>Description of What Happened <span class="required">*</span></label>
+<textarea id="description"></textarea>
+
+<label>Was anyone injured?</label>
+<select id="injured">
+<option value="">Select</option>
+<option>Yes</option>
+<option>No</option>
+<option>Unknown</option>
+</select>
+
+<label>Immediate Action Taken</label>
+<textarea id="action"></textarea>
+
+<label>Reported By <span class="required">*</span></label>
+<input id="reportedBy" type="text">
+
+<button class="action-button" id="submitButton" onclick="sendReport()">📝 Submit Report</button>
+
+<div id="message" class="result-box" style="display:none;margin-top:20px;"></div>
+
+<br>
+<a class="back" href="index.html">🏠 Back to Safety Centre</a>
+
+</div>
+</div>
+
+<script>
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbzb3lTrtQceSNyFo0VFTmMxD3Wp_gLa7NiWrKXElr4SSQNjiUeAUME6eHFNr4ArgzpCCw/exec";
+
+async function sendReport(){
+
+const msg=document.getElementById("message");
+const btn=document.getElementById("submitButton");
+
+const data={
+name:name.value.trim(),
+plant:plant.value,
+department:department.value.trim(),
+type:type.value,
+date:date.value,
+time:time.value,
+description:description.value.trim(),
+injured:injured.value,
+action:action.value.trim(),
+reportedBy:reportedBy.value.trim()
+};
+
+if(!data.name||!data.plant||!data.type||!data.date||!data.description||!data.reportedBy){
+msg.style.display="block";
+msg.innerHTML="<strong>Please complete all required fields.</strong>";
+return;
+}
+
+btn.disabled=true;
+btn.textContent="Submitting...";
+
+try{
+const r=await fetch(SCRIPT_URL,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify(data)
+});
+
+if(!r.ok) throw new Error("Submit failed");
+
+msg.style.display="block";
+msg.style.color="#155724";
+msg.innerHTML="<strong>✅ Report submitted successfully.</strong>";
+
+document.querySelectorAll("input").forEach(i=>i.value="");
+document.querySelectorAll("textarea").forEach(t=>t.value="");
+document.querySelectorAll("select").forEach(s=>s.selectedIndex=0);
+
+}catch(e){
+msg.style.display="block";
+msg.style.color="#a00";
+msg.innerHTML="<strong>Submission failed.</strong><br>Please try again.";
+console.error(e);
+}
+
+btn.disabled=false;
+btn.innerHTML="📝 Submit Report";
+}
+</script>
+</body>
+</html>
